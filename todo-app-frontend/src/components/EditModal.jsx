@@ -10,6 +10,7 @@ import {
   updateShowModal,
   updateTaskVal,
 } from "../redux/taskSlice";
+import { successToast } from "./toast";
 
 function EditModal({ show, onHide, value }) {
   const { isCompleted, taskVal } = useSelector((state) => state.tasks);
@@ -42,6 +43,7 @@ function EditModal({ show, onHide, value }) {
     editTask(id);
     console.log(`task: ${task}, completion: ${completion}`);
     dispatch(updateShowModal(false));
+    successToast("Task edited successfully");
   };
   return (
     <div>
