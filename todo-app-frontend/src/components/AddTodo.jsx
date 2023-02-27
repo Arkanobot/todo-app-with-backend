@@ -3,9 +3,19 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import { successToast, errorToast } from "./toast";
+import axios from "axios";
 
 function AddTodo() {
   let task;
+
+  async function addTask() {
+    try {
+      const response = axios.post("http://localhost:4000/add", { tasks: task });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const inputRef = useRef();
 
   const handleChange = (e) => {
@@ -17,9 +27,11 @@ function AddTodo() {
       errorToast("Please enter a Task");
     } else {
       //show a toast on sending the post request
+      addTask();
       successToast("Task successfully created");
       //clearing the input field
-      inputRef.current.value = "";
+      console.log(task);
+      setTimeout(() => (inputRef.current.value = ""), 500);
     }
   };
   return (

@@ -1,12 +1,44 @@
 import React from "react";
+import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
+import { useDispatch, useSelector } from "react-redux";
+import { updateCompletion } from "../redux/taskSlice";
 
-function EditModal({ show, onHide, value, disabled }) {
-  const handleEditCall = () => {
-    console.log("this is edit call");
+function EditModal({ show, onHide, value }) {
+  const { isCompleted } = useSelector((state) => state.tasks);
+  const dispatch = useDispatch();
+  let task = value.tasks;
+  let completion = isCompleted;
+
+  async function editTask(id) {
+    try {
+      const response = await axios.put(`http://localhost:4000/get-list/${id}`, {
+        tasks: task,
+        status: completion,
+      });
+      console.log(task, completion);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function handleTaskChange(e) {
+    console.log(task);
+    return (task = e.target.value);
+  }
+
+  function handleCompletionChange(e) {
+    dispatch(updateCompletion(e.target.checked));
+    console.log(isCompleted);
+  }
+  const handleEditCall = (id) => {
+    editTask(id);
+    console.log(`task: ${task}, completion: ${completion}`);
+    // editTask(value._id)
   };
   return (
     <div>
@@ -20,22 +52,21 @@ function EditModal({ show, onHide, value, disabled }) {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Edit Task
+            Confirmation
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <InputGroup className="mb-3">
             <Form.Control
-              {...disabled}
               placeholder={value.tasks}
               defaultValue={value.tasks}
               aria-label="Username"
               aria-describedby="basic-addon1"
+              onChange={(e) => handleTaskChange(e)}
             />
-            <InputGroup.Text id="basic-addon1">Edit</InputGroup.Text>
+            <InputGroup.Text id="basic-addon1">Task</InputGroup.Text>
           </InputGroup>
           <Form.Check
-            {...disabled}
             type="switch"
             id="custom-switch"
             label="Task Completed"
@@ -43,6 +74,7 @@ function EditModal({ show, onHide, value, disabled }) {
             defaultChecked={value.isCompleted}
             defaultValue={value.isCompleted}
             className="mx-2 mx-md-3"
+            onChange={(e) => handleCompletionChange(e)}
           />
           <p className="m-2 m-md-3">Are you sure you want to make changes ?</p>
         </Modal.Body>

@@ -46,6 +46,7 @@ app.put("/get-list/:id", async (req, res) => {
     {
       $set: {
         tasks: req.body.tasks,
+        isCompleted: req.body.status,
       },
     }
   );

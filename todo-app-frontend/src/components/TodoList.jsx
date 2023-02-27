@@ -6,17 +6,21 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { successToast, errorToast } from "./toast";
 import axios from "axios";
 import EditModal from "./EditModal";
+import { useDispatch, useSelector } from "react-redux";
+import { updateTasks } from "../redux/taskSlice";
 
 function TodoList() {
-  const [tasks, setTasks] = useState([]);
+  // const [tasks, setTasks] = useState([]);
+  const { tasks } = useSelector((state) => state.tasks);
+  const dispatch = useDispatch();
   const [modalShow, setModalShow] = useState(false);
   const [editVal, setEditVal] = useState({});
-  const [inputDisabled, setInputDisabled] = useState(null);
 
   async function fetchTasks() {
     try {
       const response = await axios.get("http://localhost:4000/get-list");
-      setTasks(response.data);
+      dispatch(updateTasks(response.data));
+      // setTasks(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -43,34 +47,34 @@ function TodoList() {
       console.log(error);
     }
   }
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
+  setTimeout(
+    useEffect(() => {
       fetchTasks();
-      console.log(tasks);
-    }, 1000);
-    return () => clearTimeout(timer);
-  });
+    }),
+    36000000
+  );
 
   const handleEdit = (i) => {
     // datas[i].tasks = "New Value"; // need to setup a modal here to take new input
     setEditVal(tasks[i]);
-    setInputDisabled(null);
     setModalShow(true);
+    setTimeout(() => {
+      fetchTasks();
+    }, 1000);
   };
 
-  const handleDelete = (i) => {
-    setEditVal(tasks[i]);
-    setModalShow(true);
-    setInputDisabled("disabled");
+  const handleDelete = (id) => {
+    deleteTask(id);
     // deleteTask(id);
     errorToast("Task Deleted");
+    fetchTasks();
   };
 
   const handleComplete = (id) => {
     completeTask(id);
     //toast
     successToast("Task Completed! Yay!");
+    fetchTasks();
   };
   return (
     <div>
@@ -78,7 +82,6 @@ function TodoList() {
         show={modalShow}
         onHide={(e) => setModalShow(false)}
         value={editVal}
-        disabled={inputDisabled}
       />
       <div className="border border-secondary rounded">
         <Table striped bordered hover responsive="md">
@@ -114,7 +117,9 @@ function TodoList() {
                         />
 
                         <Dropdown.Menu>
-                          <Dropdown.Item onClick={(e) => handleDelete(index)}>
+                          <Dropdown.Item
+                            onClick={(e) => handleDelete(data._id)}
+                          >
                             Delete
                           </Dropdown.Item>
                         </Dropdown.Menu>
@@ -144,7 +149,9 @@ function TodoList() {
                           <Dropdown.Item onClick={(e) => handleEdit(index)}>
                             Edit
                           </Dropdown.Item>
-                          <Dropdown.Item onClick={(e) => handleDelete(index)}>
+                          <Dropdown.Item
+                            onClick={(e) => handleDelete(data._id)}
+                          >
                             Delete
                           </Dropdown.Item>
                         </Dropdown.Menu>
