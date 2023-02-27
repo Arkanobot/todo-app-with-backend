@@ -7,13 +7,17 @@ import { successToast, errorToast } from "./toast";
 import axios from "axios";
 import EditModal from "./EditModal";
 import { useDispatch, useSelector } from "react-redux";
-import { updateTasks } from "../redux/taskSlice";
+import {
+  updateShowModal,
+  updateTaskVal,
+  updateTasks,
+} from "../redux/taskSlice";
 
 function TodoList() {
   // const [tasks, setTasks] = useState([]);
-  const { tasks } = useSelector((state) => state.tasks);
+  const { tasks, showModal } = useSelector((state) => state.tasks);
   const dispatch = useDispatch();
-  const [modalShow, setModalShow] = useState(false);
+  // const [modalShow, setModalShow] = useState(false);
   const [editVal, setEditVal] = useState({});
 
   async function fetchTasks() {
@@ -57,7 +61,8 @@ function TodoList() {
   const handleEdit = (i) => {
     // datas[i].tasks = "New Value"; // need to setup a modal here to take new input
     setEditVal(tasks[i]);
-    setModalShow(true);
+    dispatch(updateShowModal(true));
+    dispatch(updateTaskVal(tasks[i].tasks));
     setTimeout(() => {
       fetchTasks();
     }, 1000);
@@ -79,8 +84,8 @@ function TodoList() {
   return (
     <div>
       <EditModal
-        show={modalShow}
-        onHide={(e) => setModalShow(false)}
+        show={showModal}
+        onHide={(e) => dispatch(updateShowModal(false))}
         value={editVal}
       />
       <div className="border border-secondary rounded">

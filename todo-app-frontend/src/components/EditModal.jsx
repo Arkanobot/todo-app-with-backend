@@ -5,10 +5,14 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { useDispatch, useSelector } from "react-redux";
-import { updateCompletion } from "../redux/taskSlice";
+import {
+  updateCompletion,
+  updateShowModal,
+  updateTaskVal,
+} from "../redux/taskSlice";
 
 function EditModal({ show, onHide, value }) {
-  const { isCompleted } = useSelector((state) => state.tasks);
+  const { isCompleted, taskVal } = useSelector((state) => state.tasks);
   const dispatch = useDispatch();
   let task = value.tasks;
   let completion = isCompleted;
@@ -16,7 +20,7 @@ function EditModal({ show, onHide, value }) {
   async function editTask(id) {
     try {
       const response = await axios.put(`http://localhost:4000/get-list/${id}`, {
-        tasks: task,
+        tasks: taskVal,
         status: completion,
       });
       console.log(task, completion);
@@ -27,8 +31,7 @@ function EditModal({ show, onHide, value }) {
   }
 
   function handleTaskChange(e) {
-    console.log(task);
-    return (task = e.target.value);
+    dispatch(updateTaskVal((task = e.target.value)));
   }
 
   function handleCompletionChange(e) {
@@ -38,7 +41,7 @@ function EditModal({ show, onHide, value }) {
   const handleEditCall = (id) => {
     editTask(id);
     console.log(`task: ${task}, completion: ${completion}`);
-    // editTask(value._id)
+    dispatch(updateShowModal(false));
   };
   return (
     <div>
