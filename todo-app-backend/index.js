@@ -21,12 +21,17 @@ app.get("/get-list", async (req, res) => {
 
 //adding tasks to tasks list
 app.post("/add", async (req, res) => {
-  if (!req.body.tasks) {
+  if (
+    !req.body.tasks ||
+    req.body.tasks === "" ||
+    (req.body.tasks === null && !req.body.prio)
+  ) {
     // throw new Error("Name is a mandatory field.");
-    res.status(400).send("{msg: Bad request - missing name}");
+    res.status(400).send("{msg: Bad request - missing name / priority}");
   }
   let payLoad = {
     tasks: req.body.tasks,
+    prio: req.body.prio,
     isCompleted: false,
     isDeleted: false,
   };

@@ -6,7 +6,10 @@ export const taskSlice = createSlice({
     tasks: [],
     isCompleted: false,
     taskVal: "",
+    editTaskVal: "",
     showModal: false,
+    priorityAddToDo: "High",
+    addToDoTaskName: undefined,
   },
   reducers: {
     updateTasks: (state, action) => {
@@ -18,12 +21,28 @@ export const taskSlice = createSlice({
     updateTaskVal: (state, action) => {
       state.taskVal = action.payload;
     },
+    updateEditTaskVal: (state, action) => {
+      state.editTaskVal = action.payload;
+    },
     updateShowModal: (state, action) => {
       state.showModal = action.payload;
+    },
+    updatePriorityAddToDo: (state, action) => {
+      state.priorityAddToDo = action.payload;
+    },
+    updateAddToDoTaskName: (state, action) => {
+      state.addToDoTaskName = action.payload;
     },
   },
 });
 
-export const { updateTasks, updateCompletion, updateTaskVal, updateShowModal } =
-  taskSlice.actions;
+export const {
+  updateTasks,
+  updateCompletion,
+  updateTaskVal,
+  updateShowModal,
+  updateEditTaskVal,
+  updatePriorityAddToDo,
+  updateAddToDoTaskName,
+} = taskSlice.actions;
 export default taskSlice.reducer;

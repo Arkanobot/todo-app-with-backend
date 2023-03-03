@@ -24,7 +24,6 @@ function EditModal({ show, onHide, value }) {
         tasks: taskVal,
         status: completion,
       });
-      console.log(task, completion);
       console.log(response);
     } catch (error) {
       console.log(error);
