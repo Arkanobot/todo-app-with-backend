@@ -70,7 +70,6 @@ function TodoList() {
 
   const handleDelete = (id) => {
     deleteTask(id);
-    // deleteTask(id);
     errorToast("Task Deleted");
     fetchTasks();
   };
@@ -93,7 +92,7 @@ function TodoList() {
           <thead>
             <tr>
               <th className="col-md-1">Sl.No</th>
-              <th className="col-md-6">Tasks</th>
+              <th className="col-md-8">Tasks</th>
               <th className="col-md-1">Actions</th>
             </tr>
           </thead>
@@ -101,12 +100,12 @@ function TodoList() {
             {tasks.map((data, index) => {
               return data.isDeleted === false ? (
                 data.isCompleted === true ? (
-                  <tr className="bg-success">
-                    <td>{index + 1}</td>
-                    <td>
+                  <tr className="bg-success text-white">
+                    <td className="text-white">{index + 1}</td>
+                    <td className="text-white">
                       <del>{data.tasks}</del>
                     </td>
-                    <td>
+                    <td className="text-center">
                       <Dropdown as={ButtonGroup}>
                         <Button
                           variant="warning"
@@ -135,7 +134,7 @@ function TodoList() {
                   <tr>
                     <td>{index + 1}</td>
                     <td>{data.tasks}</td>
-                    <td>
+                    <td className="text-center">
                       <Dropdown as={ButtonGroup}>
                         <Button
                           variant="success"
